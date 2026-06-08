@@ -1,37 +1,18 @@
 package com.sistema.asistencia.model.entity;
 
 public class Usuario {
-    // Definición del Enum para acoplarlo al ENUM 'rol_usuario' de PostgreSQL
-    public enum RolUsuario {
-        Administrador, Docente
-    }
-
     private int idUsuario;
     private String codigoTrabajador;
     private String nombres;
     private String apellidos;
     private String correo;
-    private String contrasena; // Almacenará el hash de seguridad
-    private RolUsuario rol;
+    private String contrasena;
+    private String rol;
     private boolean estado;
 
-    // Constructor Vacío (Obligatorio para frameworks y buenas prácticas)
     public Usuario() {}
 
-    // Constructor Completo
-    public Usuario(int idUsuario, String codigoTrabajador, String nombres, String apellidos, 
-                   String correo, String contrasena, RolUsuario rol, boolean estado) {
-        this.idUsuario = idUsuario;
-        this.codigoTrabajador = codigoTrabajador;
-        this.nombres = nombres;
-        this.apellidos = apellidos;
-        this.correo = correo;
-        this.contrasena = contrasena;
-        this.rol = rol;
-        this.estado = estado;
-    }
-
-    // Métodos Getters y Setters
+    // Métodos Getters y Setters exactos
     public int getIdUsuario() { return idUsuario; }
     public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
 
@@ -50,8 +31,8 @@ public class Usuario {
     public String getContrasena() { return contrasena; }
     public void setContrasena(String contrasena) { this.contrasena = contrasena; }
 
-    public RolUsuario getRol() { return rol; }
-    public void setRol(RolUsuario rol) { this.rol = rol; }
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
 
     public boolean isEstado() { return estado; }
     public void setEstado(boolean estado) { this.estado = estado; }
