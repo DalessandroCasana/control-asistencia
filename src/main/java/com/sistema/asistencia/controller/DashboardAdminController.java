@@ -40,7 +40,12 @@ public class DashboardAdminController implements ActionListener {
             // new CursosController(new FrmCursos());
         } 
         else if (origen == vista.btnSecciones) {
-            JOptionPane.showMessageDialog(vista, "Abriendo panel de Secciones...", "Módulo Secciones", JOptionPane.INFORMATION_MESSAGE);
+            // Instanciar la vista de secciones pasándole el frame administrador como padre
+            com.sistema.asistencia.view.FrmGestionSecciones frmSec = new com.sistema.asistencia.view.FrmGestionSecciones(vista);
+            // Inyectar el controlador para manejar la UI y la persistencia
+            new GestionSeccionesController(frmSec);
+            // Mostrar la ventana modal
+            frmSec.setVisible(true);
         } 
         else if (origen == vista.btnHorarios) {
             JOptionPane.showMessageDialog(vista, "Abriendo asignación de Horarios...", "Módulo Horarios", JOptionPane.INFORMATION_MESSAGE);

@@ -6,131 +6,114 @@ import java.awt.*;
 
 public class FrmGestionSecciones extends JDialog {
 
-    // Componentes del Formulario de Entrada
-    public JTextField txtIdSeccion; // Oculto para identificar la llave primaria en updates
-    public JTextField txtCodigoSeccion; // Ej: 44310
-    public JComboBox<String> cboCursos; // Almacenará los cursos registrados
-    public JComboBox<String> cboDocentes; // Almacenará los docentes disponibles
-    public JTextField txtAula; // Ej: Aula 402-A
+    // Componentes del Formulario (Públicos para el Controlador)
+    public JComboBox<String> cboCursos;
+    public JComboBox<String> cboDocentes;
+    public JTextField txtCodigoSeccion;
+    public JTextField txtPeriodo;
 
-    // Botones CRUD
-    public JButton btnRegistrar;
-    public JButton btnModificar;
-    public JButton btnEliminar;
+    // Botones de Acción
+    public JButton btnGuardar;
     public JButton btnLimpiar;
+    public JButton btnCerrar;
 
     // Tabla de Visualización
     public JTable tblSecciones;
     public DefaultTableModel modeloTabla;
 
-    public FrmGestionSecciones(Frame padre) {
-        super(padre, "Mantenimiento - Gestión de Secciones Académicas", true);
-        setSize(900, 500);
+    public FrmGestionSecciones(Window padre) {
+        super(padre, "Módulo de Planificación - Gestión de Secciones", Dialog.ModalityType.APPLICATION_MODAL);
+        setSize(800, 450);
         setLocationRelativeTo(padre);
         setResizable(false);
 
-        // Contenedor principal con márgenes limpios
+        // Panel Principal
         JPanel panelPrincipal = new JPanel(new BorderLayout(15, 15));
         panelPrincipal.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        panelPrincipal.setBackground(new Color(245, 247, 250));
+        panelPrincipal.setBackground(new Color(240, 244, 248));
 
-        // ==========================================
-        // 1. PANEL IZQUIERDO: Formulario con GridBagLayout
-        // ==========================================
-        JPanel panelFormulario = new JPanel(new GridBagLayout());
-        panelFormulario.setBorder(BorderFactory.createTitledBorder(" Planificación de Sección "));
-        panelFormulario.setPreferredSize(new Dimension(350, 400));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 6, 8, 6);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        // ========================================================
+        // 1. FORMULARIO DE REGISTRO (IZQUIERDA)
+        // ========================================================
+        JPanel panelForm = new JPanel(null);
+        panelForm.setPreferredSize(new Dimension(300, 0));
+        panelForm.setBorder(BorderFactory.createTitledBorder(" Nueva Sección Académica "));
+        panelForm.setOpaque(false);
 
-        // ID Oculto
-        txtIdSeccion = new JTextField();
-        txtIdSeccion.setVisible(false);
+        JLabel lblCurso = new JLabel("Seleccione Asignatura/Curso:");
+        lblCurso.setBounds(15, 25, 270, 20);
+        cboCursos = new JComboBox<>();
+        cboCursos.setBounds(15, 45, 260, 30);
 
-        // Código de la Sección
-        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.0;
-        panelFormulario.add(new JLabel("Cód. Sección:"), gbc);
+        JLabel lblDocente = new JLabel("Asignar Docente Titular:");
+        lblDocente.setBounds(15, 85, 270, 20);
+        cboDocentes = new JComboBox<>();
+        cboDocentes.setBounds(15, 105, 260, 30);
+
+        JLabel lblCodigo = new JLabel("Código de Sección (Ej: 44310):");
+        lblCodigo.setBounds(15, 145, 270, 20);
         txtCodigoSeccion = new JTextField();
-        gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 1.0;
-        panelFormulario.add(txtCodigoSeccion, gbc);
+        txtCodigoSeccion.setBounds(15, 165, 260, 30);
 
-        // ComboBox: Curso Vinculado
-        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.0;
-        panelFormulario.add(new JLabel("Curso:"), gbc);
-        cboCursos = new JComboBox<>(new String[]{"-- Seleccione Curso --", "INF-401 - Integrador I", "INF-402 - Arquitectura de Software"});
-        gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 1.0;
-        panelFormulario.add(cboCursos, gbc);
+        JLabel lblPeriodo = new JLabel("Periodo Académico (Ej: 2026-1):");
+        lblPeriodo.setBounds(15, 205, 270, 20);
+        txtPeriodo = new JTextField();
+        txtPeriodo.setBounds(15, 225, 260, 30);
 
-        // ComboBox: Docente Asignado
-        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.0;
-        panelFormulario.add(new JLabel("Docente:"), gbc);
-        cboDocentes = new JComboBox<>(new String[]{"-- Seleccione Docente --", "Ing. Carlos Torres", "Dra. Ana Martínez"});
-        gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1.0;
-        panelFormulario.add(cboDocentes, gbc);
+        btnGuardar = new JButton("Registrar Sección");
+        btnGuardar.setBackground(new Color(46, 204, 113));
+        btnGuardar.setForeground(Color.WHITE);
+        btnGuardar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnGuardar.setBounds(15, 280, 260, 35);
+        btnGuardar.setFocusPainted(false);
 
-        // Campo Aula
-        gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0.0;
-        panelFormulario.add(new JLabel("Aula / Lab:"), gbc);
-        txtAula = new JTextField();
-        gbc.gridx = 1; gbc.gridy = 3; gbc.weightx = 1.0;
-        panelFormulario.add(txtAula, gbc);
-
-        // Panel de Botones
-        JPanel panelBotonesForm = new JPanel(new GridLayout(2, 2, 8, 8));
-        panelBotonesForm.setOpaque(false);
-        
-        btnRegistrar = new JButton("Registrar");
-        btnRegistrar.setBackground(new Color(28, 112, 219));
-        btnRegistrar.setForeground(Color.WHITE);
-        
-        btnModificar = new JButton("Modificar");
-        btnEliminar = new JButton("Eliminar");
-        btnEliminar.setBackground(new Color(231, 76, 60));
-        btnEliminar.setForeground(Color.WHITE);
-        
         btnLimpiar = new JButton("Limpiar");
+        btnLimpiar.setBounds(15, 325, 260, 28);
 
-        panelBotonesForm.add(btnRegistrar);
-        panelBotonesForm.add(btnModificar);
-        panelBotonesForm.add(btnEliminar);
-        panelBotonesForm.add(btnLimpiar);
+        panelForm.add(lblCurso);
+        panelForm.add(cboCursos);
+        panelForm.add(lblDocente);
+        panelForm.add(cboDocentes);
+        panelForm.add(lblCodigo);
+        panelForm.add(txtCodigoSeccion);
+        panelForm.add(lblPeriodo);
+        panelForm.add(txtPeriodo);
+        panelForm.add(btnGuardar);
+        panelForm.add(btnLimpiar);
 
-        // Insertar bloque de botones en la parte inferior del formulario
-        gbc.gridx = 0; gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        gbc.insets = new Insets(25, 6, 5, 6);
-        panelFormulario.add(panelBotonesForm, gbc);
+        panelPrincipal.add(panelForm, BorderLayout.WEST);
 
-        panelPrincipal.add(panelFormulario, BorderLayout.WEST);
-
-        // ==========================================
-        // 2. PANEL CENTRAL/DERECHO: Grid de Visualización
-        // ==========================================
+        // ========================================================
+        // 2. TABLA DE REGISTROS (DERECHA)
+        // ========================================================
         JPanel panelTabla = new JPanel(new BorderLayout());
-        panelTabla.setBorder(BorderFactory.createTitledBorder(" Secciones Academicas Aperturadas "));
+        panelTabla.setBorder(BorderFactory.createTitledBorder(" Registro de Secciones Aperturadas "));
+        panelTabla.setOpaque(false);
 
-        String[] columnas = {"ID", "Cód. Sección", "Curso Asignado", "Docente", "Aula / Ubicación"};
+        String[] columnas = {"ID", "Código", "Curso / Asignatura", "Docente Asignado", "Periodo"};
         modeloTabla = new DefaultTableModel(null, columnas) {
             @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Desactiva edición en celda directa
-            }
+            public boolean isCellEditable(int r, int c) { return false; }
         };
 
         tblSecciones = new JTable(modeloTabla);
         tblSecciones.setRowHeight(24);
-        tblSecciones.getTableHeader().setReorderingAllowed(false);
-        
-        // Ocultar ID físicamente
-        tblSecciones.getColumnModel().getColumn(0).setMinWidth(0);
-        tblSecciones.getColumnModel().getColumn(0).setMaxWidth(0);
-        tblSecciones.getColumnModel().getColumn(0).setPreferredWidth(0);
+        tblSecciones.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tblSecciones.getColumnModel().getColumn(1).setPreferredWidth(70);
+        tblSecciones.getColumnModel().getColumn(2).setPreferredWidth(180);
+        tblSecciones.getColumnModel().getColumn(3).setPreferredWidth(180);
 
         JScrollPane scroll = new JScrollPane(tblSecciones);
         panelTabla.add(scroll, BorderLayout.CENTER);
-        
+
         panelPrincipal.add(panelTabla, BorderLayout.CENTER);
+
+        // Botón inferior
+        btnCerrar = new JButton("Cerrar Ventana");
+        JPanel panelSur = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panelSur.setOpaque(false);
+        panelSur.add(btnCerrar);
+        panelPrincipal.add(panelSur, BorderLayout.SOUTH);
 
         add(panelPrincipal);
     }
