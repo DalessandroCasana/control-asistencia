@@ -2,96 +2,78 @@ package com.sistema.asistencia.model.dao;
 
 import com.sistema.asistencia.config.ConexionBD;
 import com.sistema.asistencia.model.entity.Horario;
+import com.sistema.asistencia.model.entity.Seccion;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HorarioDAO {
 
-    // 1. LISTAR HORARIOS CON INNER JOIN
-    public List<Horario> listar() {
+    public void insertar(Horario horario) throws SQLException {
+        // Forzamos el casteo de dia_semana a tu tipo ENUM de Postgres con ::dia_semana_enum
+        String sql = "INSERT INTO Horario (id_seccion, dia_semana, hora_inicio, hora_fin, aula) " +
+                     "VALUES (?, ?::dia_semana_enum, ?, ?, ?)";
+        
+        try (Connection cn = ConexionBD.obtenerConexion();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            
+            ps.setInt(1, horario.getIdSeccion());
+            ps.setString(2, horario.getDiaSemana());
+            ps.setTime(3, horario.getHoraInicio());
+            ps.setTime(4, horario.getHoraFin());
+            ps.setString(5, horario.getAula());
+            
+            ps.executeUpdate();
+        }
+    }
+
+    public List<Horario> listar() throws SQLException {
         List<Horario> lista = new ArrayList<>();
-        String sql = "SELECT h.id_horario, h.id_seccion, h.dia, h.hora_inicio, h.hora_fin, s.codigo_seccion " +
-                     "FROM horario h " +
-                     "INNER JOIN seccion s ON h.id_seccion = s.id_seccion " +
-                     "ORDER BY CASE h.dia " +
-                     "  WHEN 'Lunes' THEN 1 WHEN 'Martes' THEN 2 WHEN 'Miércoles' THEN 3 " +
-                     "  WHEN 'Jueves' THEN 4 WHEN 'Viernes' THEN 5 WHEN 'Sábado' THEN 6 END, h.hora_inicio ASC";
+        String sql = "SELECT h.id_horario, h.id_seccion, h.dia_semana::text AS dia, h.hora_inicio, h.hora_fin, h.aula, " +
+                     "s.codigo_seccion, c.nombre_curso " +
+                     "FROM Horario h " +
+                     "INNER JOIN Seccion s ON h.id_seccion = s.id_seccion " +
+                     "INNER JOIN Curso c ON s.id_curso = c.id_curso " +
+                     "ORDER BY h.id_horario DESC";
 
         try (Connection cn = ConexionBD.obtenerConexion();
              PreparedStatement ps = cn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-
+            
             while (rs.next()) {
                 Horario h = new Horario();
                 h.setIdHorario(rs.getInt("id_horario"));
                 h.setIdSeccion(rs.getInt("id_seccion"));
-                h.setDia(rs.getString("dia"));
-                
-                // Formateamos los objetos de tiempo de la base de datos a cadenas limpias (HH:mm)
-                h.setHoraInicio(rs.getTime("hora_inicio").toString().substring(0, 5));
-                h.setHoraFin(rs.getTime("hora_fin").toString().substring(0, 5));
+                h.setDiaSemana(rs.getString("dia"));
+                h.setHoraInicio(rs.getTime("hora_inicio"));
+                h.getHoraFin(); // Mapeo temporal
+                h.setHoraFin(rs.getTime("hora_fin"));
+                h.setAula(rs.getString("aula"));
                 h.setCodigoSeccion(rs.getString("codigo_seccion"));
-                
+                h.setNombreCurso(rs.getString("nombre_curso"));
                 lista.add(h);
             }
-        } catch (SQLException ex) {
-            System.err.println("Error en HorarioDAO.listar: " + ex.getMessage());
         }
         return lista;
     }
 
-    // 2. REGISTRAR HORARIO (INSERT)
-    public boolean registrar(Horario horario) {
-        String sql = "INSERT INTO horario (id_seccion, dia, hora_inicio, hora_fin) VALUES (?, ?, CAST(? AS time), CAST(? AS time))";
-        
+    // Listado auxiliar para llenar el combo de secciones disponibles
+    public List<Seccion> listarSeccionesAux() throws SQLException {
+        List<Seccion> lista = new ArrayList<>();
+        String sql = "SELECT s.id_seccion, s.codigo_seccion, c.nombre_curso " +
+                     "FROM Seccion s INNER JOIN Curso c ON s.id_curso = c.id_curso ORDER BY s.codigo_seccion ASC";
         try (Connection cn = ConexionBD.obtenerConexion();
-             PreparedStatement ps = cn.prepareStatement(sql)) {
-            
-            ps.setInt(1, horario.getIdSeccion());
-            ps.setString(2, horario.getDia());
-            ps.setString(3, horario.getHoraInicio());
-            ps.setString(4, horario.getHoraFin());
-
-            return ps.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            System.err.println("Error en HorarioDAO.registrar: " + ex.getMessage());
-            return false;
+             PreparedStatement ps = cn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Seccion s = new Seccion();
+                s.setIdSeccion(rs.getInt("id_seccion"));
+                s.setCodigoSeccion(rs.getString("codigo_seccion"));
+                s.setNombreCurso(rs.getString("nombre_curso"));
+                lista.add(s);
+            }
         }
-    }
-
-    // 3. MODIFICAR HORARIO (UPDATE)
-    public boolean modificar(Horario horario) {
-        String sql = "UPDATE horario SET id_seccion = ?, dia = ?, hora_inicio = CAST(? AS time), hora_fin = CAST(? AS time) WHERE id_horario = ?";
-        
-        try (Connection cn = ConexionBD.obtenerConexion();
-             PreparedStatement ps = cn.prepareStatement(sql)) {
-            
-            ps.setInt(1, horario.getIdSeccion());
-            ps.setString(2, horario.getDia());
-            ps.setString(3, horario.getHoraInicio());
-            ps.setString(4, horario.getHoraFin());
-            ps.setInt(5, horario.getIdHorario());
-
-            return ps.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            System.err.println("Error en HorarioDAO.modificar: " + ex.getMessage());
-            return false;
-        }
-    }
-
-    // 4. ELIMINAR HORARIO (DELETE)
-    public boolean eliminar(int idHorario) {
-        String sql = "DELETE FROM horario WHERE id_horario = ?";
-        
-        try (Connection cn = ConexionBD.obtenerConexion();
-             PreparedStatement ps = cn.prepareStatement(sql)) {
-            
-            ps.setInt(1, idHorario);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            System.err.println("Error en HorarioDAO.eliminar: " + ex.getMessage());
-            return false;
-        }
+        return lista;
     }
 }

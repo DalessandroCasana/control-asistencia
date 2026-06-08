@@ -6,141 +6,107 @@ import java.awt.*;
 
 public class FrmAsignarHorarios extends JDialog {
 
-    // Componentes del Formulario de Entrada
-    public JTextField txtIdHorario; // Oculto para identificar la llave primaria en updates
-    public JComboBox<String> cboSecciones; // Almacenará las secciones configuradas
-    public JComboBox<String> cboDias; // Lunes, Martes, Miércoles, etc.
-    public JSpinner spnHoraInicio; // Selector de tiempo (Formato de hora)
-    public JSpinner spnHoraFin;
+    public JComboBox<String> cboSecciones;
+    public JComboBox<String> cboDias;
+    public JTextField txtHoraInicio;
+    public JTextField txtHoraFin;
+    public JTextField txtAula;
 
-    // Botones CRUD
-    public JButton btnAsignar;
-    public JButton btnModificar;
-    public JButton btnEliminar;
+    public JButton btnGuardar;
     public JButton btnLimpiar;
+    public JButton btnCerrar;
 
-    // Tabla de Visualización
     public JTable tblHorarios;
     public DefaultTableModel modeloTabla;
 
-    public FrmAsignarHorarios(Frame padre) {
-        super(padre, "Planificación - Asignación de Horarios Institucionales", true);
-        setSize(900, 480);
+    public FrmAsignarHorarios(Window padre) {
+        super(padre, "Módulo de Gestión - Asignación de Bloques Horarios", Dialog.ModalityType.APPLICATION_MODAL);
+        setSize(820, 450);
         setLocationRelativeTo(padre);
         setResizable(false);
 
-        // Contenedor principal con márgenes limpios
         JPanel panelPrincipal = new JPanel(new BorderLayout(15, 15));
         panelPrincipal.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        panelPrincipal.setBackground(new Color(245, 247, 250));
+        panelPrincipal.setBackground(new Color(244, 246, 249));
 
-        // ==========================================
-        // 1. PANEL IZQUIERDO: Formulario de Tiempo
-        // ==========================================
-        JPanel panelFormulario = new JPanel(new GridBagLayout());
-        panelFormulario.setBorder(BorderFactory.createTitledBorder(" Bloque de Tiempo "));
-        panelFormulario.setPreferredSize(new Dimension(350, 400));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 6, 8, 6);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        // FORMULARIO (IZQUIERDA)
+        JPanel panelForm = new JPanel(null);
+        panelForm.setPreferredSize(new Dimension(310, 0));
+        panelForm.setBorder(BorderFactory.createTitledBorder(" Planificación del Horario "));
+        panelForm.setOpaque(false);
 
-        // ID Oculto
-        txtIdHorario = new JTextField();
-        txtIdHorario.setVisible(false);
+        JLabel lblSeccion = new JLabel("Seleccione Sección Aperturada:");
+        lblSeccion.setBounds(15, 25, 280, 20);
+        cboSecciones = new JComboBox<>();
+        cboSecciones.setBounds(15, 45, 270, 30);
 
-        // ComboBox: Sección Vinculada
-        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.0;
-        panelFormulario.add(new JLabel("Sección Académica:"), gbc);
-        cboSecciones = new JComboBox<>(new String[]{"-- Seleccione Sección --", "Sección 44310 (Integrador I)", "Sección 44311 (Arquitectura)"});
-        gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 1.0;
-        panelFormulario.add(cboSecciones, gbc);
+        JLabel lblDia = new JLabel("Día de la Semana:");
+        lblDia.setBounds(15, 85, 280, 20);
+        cboDias = new JComboBox<>(new String[]{"-- Seleccione un Día --", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"});
+        cboDias.setBounds(15, 105, 270, 30);
 
-        // ComboBox: Día de la semana
-        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.0;
-        panelFormulario.add(new JLabel("Día Semanal:"), gbc);
-        cboDias = new JComboBox<>(new String[]{"-- Seleccione Día --", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"});
-        gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 1.0;
-        panelFormulario.add(cboDias, gbc);
+        JLabel lblInicio = new JLabel("Hora Inicio (HH:MM - Ej: 08:00):");
+        lblInicio.setBounds(15, 145, 280, 20);
+        txtHoraInicio = new JTextField();
+        txtHoraInicio.setBounds(15, 165, 270, 30);
 
-        // Spinner: Hora Inicio (Modelo SpinnerDateModel para manejar tiempos limpios)
-        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.0;
-        panelFormulario.add(new JLabel("Hora Inicio:"), gbc);
-        
-        spnHoraInicio = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor editorInicio = new JSpinner.DateEditor(spnHoraInicio, "HH:mm");
-        spnHoraInicio.setEditor(editorInicio);
-        spnHoraInicio.setValue(new java.util.Date()); // Hora actual por defecto
-        
-        gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1.0;
-        panelFormulario.add(spnHoraInicio, gbc);
+        JLabel lblFin = new JLabel("Hora Fin (HH:MM - Ej: 10:00):");
+        lblFin.setBounds(15, 205, 280, 20);
+        txtHoraFin = new JTextField();
+        txtHoraFin.setBounds(15, 225, 270, 30);
 
-        // Spinner: Hora Fin
-        gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0.0;
-        panelFormulario.add(new JLabel("Hora Fin:"), gbc);
-        
-        spnHoraFin = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor editorFin = new JSpinner.DateEditor(spnHoraFin, "HH:mm");
-        spnHoraFin.setEditor(editorFin);
-        spnHoraFin.setValue(new java.util.Date());
-        
-        gbc.gridx = 1; gbc.gridy = 3; gbc.weightx = 1.0;
-        panelFormulario.add(spnHoraFin, gbc);
+        JLabel lblAula = new JLabel("Aula Asignada (Ej: A-302):");
+        lblAula.setBounds(15, 265, 280, 20);
+        txtAula = new JTextField();
+        txtAula.setBounds(15, 285, 270, 30);
 
-        // Panel de Botones
-        JPanel panelBotonesForm = new JPanel(new GridLayout(2, 2, 8, 8));
-        panelBotonesForm.setOpaque(false);
-        
-        btnAsignar = new JButton("Asignar");
-        btnAsignar.setBackground(new Color(28, 112, 219));
-        btnAsignar.setForeground(Color.WHITE);
-        
-        btnModificar = new JButton("Modificar");
-        btnEliminar = new JButton("Eliminar");
-        btnEliminar.setBackground(new Color(231, 76, 60));
-        btnEliminar.setForeground(Color.WHITE);
-        
-        btnLimpiar = new JButton("Limpiar");
+        btnGuardar = new JButton("Asignar Bloque");
+        btnGuardar.setBackground(new Color(155, 89, 182));
+        btnGuardar.setForeground(Color.WHITE);
+        btnGuardar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnGuardar.setBounds(15, 330, 270, 35);
 
-        panelBotonesForm.add(btnAsignar);
-        panelBotonesForm.add(btnModificar);
-        panelBotonesForm.add(btnEliminar);
-        panelBotonesForm.add(btnLimpiar);
+        panelForm.add(lblSeccion);
+        panelForm.add(cboSecciones);
+        panelForm.add(lblDia);
+        panelForm.add(cboDias);
+        panelForm.add(lblInicio);
+        panelForm.add(txtHoraInicio);
+        panelForm.add(lblFin);
+        panelForm.add(txtHoraFin);
+        panelForm.add(lblAula);
+        panelForm.add(txtAula);
+        panelForm.add(btnGuardar);
 
-        // Insertar bloque de botones en la parte inferior del formulario
-        gbc.gridx = 0; gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        gbc.insets = new Insets(25, 6, 5, 6);
-        panelFormulario.add(panelBotonesForm, gbc);
+        panelPrincipal.add(panelForm, BorderLayout.WEST);
 
-        panelPrincipal.add(panelFormulario, BorderLayout.WEST);
-
-        // ==========================================
-        // 2. PANEL CENTRAL/DERECHO: Grid de Visualización
-        // ==========================================
+        // TABLA DE VISUALIZACIÓN (DERECHA)
         JPanel panelTabla = new JPanel(new BorderLayout());
-        panelTabla.setBorder(BorderFactory.createTitledBorder(" Horarios Programados en el Ciclo "));
+        panelTabla.setBorder(BorderFactory.createTitledBorder(" Distribución del Tiempo Académico "));
+        panelTabla.setOpaque(false);
 
-        String[] columnas = {"ID", "Sección Académica", "Día", "Hora Inicio", "Hora Fin"};
+        String[] columnas = {"ID", "Sección", "Curso / Asignatura", "Día", "Inicio", "Fin", "Aula"};
         modeloTabla = new DefaultTableModel(null, columnas) {
             @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Desactiva edición directa en la cuadrícula
-            }
+            public boolean isCellEditable(int r, int c) { return false; }
         };
 
         tblHorarios = new JTable(modeloTabla);
         tblHorarios.setRowHeight(24);
-        tblHorarios.getTableHeader().setReorderingAllowed(false);
-        
-        // Ocultar ID físicamente
-        tblHorarios.getColumnModel().getColumn(0).setMinWidth(0);
-        tblHorarios.getColumnModel().getColumn(0).setMaxWidth(0);
-        tblHorarios.getColumnModel().getColumn(0).setPreferredWidth(0);
+        tblHorarios.getColumnModel().getColumn(0).setPreferredWidth(35);
+        tblHorarios.getColumnModel().getColumn(1).setPreferredWidth(65);
+        tblHorarios.getColumnModel().getColumn(2).setPreferredWidth(160);
 
         JScrollPane scroll = new JScrollPane(tblHorarios);
         panelTabla.add(scroll, BorderLayout.CENTER);
-        
+
         panelPrincipal.add(panelTabla, BorderLayout.CENTER);
+
+        btnCerrar = new JButton("Cerrar Panel");
+        JPanel panelSur = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panelSur.setOpaque(false);
+        panelSur.add(btnCerrar);
+        panelPrincipal.add(panelSur, BorderLayout.SOUTH);
 
         add(panelPrincipal);
     }

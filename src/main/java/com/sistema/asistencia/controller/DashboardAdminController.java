@@ -48,11 +48,9 @@ public class DashboardAdminController implements ActionListener {
             frmSec.setVisible(true);
         } 
         else if (origen == vista.btnHorarios) {
-            JOptionPane.showMessageDialog(vista, "Abriendo asignación de Horarios...", "Módulo Horarios", JOptionPane.INFORMATION_MESSAGE);
-            // Ejemplo de enlace previo:
-            // com.sistema.asistencia.view.FrmAsignarHorarios frmHor = new com.sistema.asistencia.view.FrmAsignarHorarios();
-            // new AsignarHorariosController(frmHor);
-            // frmHor.setVisible(true);
+            com.sistema.asistencia.view.FrmAsignarHorarios frmHor = new com.sistema.asistencia.view.FrmAsignarHorarios(vista);
+            new AsignarHorariosController(frmHor);
+            frmHor.setVisible(true);
         } 
         else if (origen == vista.btnCerrarSesion) {
             int opc = JOptionPane.showConfirmDialog(vista, "¿Desea salir del panel de administración?", "Cerrar Sesión", JOptionPane.YES_NO_OPTION);
