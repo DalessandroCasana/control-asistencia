@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "com.sistema.asistencia.App"
+        },
+        {
+            "type": "java",
+            "name": "Ejecutar Conectar Base Datos",
+            "request": "launch",
+            "mainClass": "com.sistema.asistencia.App",
+            "projectName": "control-asistencia",
+            "classPaths": [
+                "D:\\CASANA\\VISUAL-CODE\\SOFTWARE\\control-asistencia\\src\\main\\java",
+                "D:\\CASANA\\VISUAL-CODE\\SOFTWARE\\control-asistencia\\lib\\postgresql-42.7.3.jar"
+            ]
+        }
+    ]
+}
