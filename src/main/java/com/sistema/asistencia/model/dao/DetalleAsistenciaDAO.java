@@ -17,11 +17,7 @@ public class DetalleAsistenciaDAO {
     private static final Logger logger = LoggerFactory.getLogger(DetalleAsistenciaDAO.class);
     private final EstudianteDAO estudianteDAO = new EstudianteDAO();
 
-    /**
-     * Guarda la asistencia de todos los alumnos mediante un proceso transaccional por lotes (Batch).
-     * @param detalles Lista con los estados de asistencia de cada alumno.
-     * @return true si se guardaron todos correctamente, false si hubo un fallo y se aplicó Rollback.
-     */
+    
     public boolean guardarAsistenciaMasiva(List<DetalleAsistencia> detalles) {
         Preconditions.checkNotNull(detalles, "La lista de asistencia no puede ser nula.");
         Preconditions.checkArgument(!detalles.isEmpty(), "La lista de asistencia no puede estar vacía.");
@@ -34,7 +30,7 @@ public class DetalleAsistenciaDAO {
 
         try {
             conn = ConexionBD.obtenerConexion();
-            // Desactivamos el auto-commit para iniciar manualmente una Transacción Segura
+            
             conn.setAutoCommit(false);
             
             ps = conn.prepareStatement(sql);
@@ -51,20 +47,20 @@ public class DetalleAsistenciaDAO {
                 ps.setTime(4, Time.valueOf(detalle.getHoraMarcado()));
                 ps.setString(5, detalle.getObservacion());
                 
-                ps.addBatch(); // Agrega la fila al lote en memoria sin enviarla aún a la BD
+                ps.addBatch(); 
             }
 
-            // Ejecutamos todo el lote de un solo golpe
+            
             ps.executeBatch();
             
-            // Confirmamos y consolidamos la transacción en el disco duro de PostgreSQL
+            
             conn.commit();
             logger.info("Transacción exitosa. Se registraron {} filas de asistencia.", detalles.size());
 
-            // AUTOMATIZACIÓN (Fase 4): Tras guardar la asistencia, el sistema evalúa en segundo plano 
-            // a cada alumno de la lista para calcular inhabilitaciones de forma inmediata.
-           // AUTOMATIZACIÓN (Fase 4): Tras guardar la asistencia, el sistema evalúa en segundo plano 
-// a cada alumno de la lista para calcular inhabilitaciones de forma inmediata.
+            
+            
+           
+
             for (DetalleAsistencia detalle : detalles) {
                 estudianteDAO.verificarYActualizarInhabilitacion(
                     detalle.getEstudiante().getIdEstudiante(), 
@@ -77,7 +73,7 @@ public class DetalleAsistenciaDAO {
             logger.error("Error crítico en lote de asistencia. Iniciando Rollback para proteger la consistencia de datos.", e);
             if (conn != null) {
                 try {
-                    conn.rollback(); // Deshace absolutamente todo si un solo alumno falla
+                    conn.rollback(); 
                     logger.info("Rollback ejecutado con éxito. Ningún dato corrupto fue almacenado.");
                 } catch (SQLException ex) {
                     logger.error("Error fatal al intentar hacer el rollback", ex);
@@ -85,7 +81,7 @@ public class DetalleAsistenciaDAO {
             }
             return false;
         } finally {
-            // Liberación estricta de recursos en el bloque finally
+            
             try {
                 if (ps != null) ps.close();
                 if (conn != null) conn.close();

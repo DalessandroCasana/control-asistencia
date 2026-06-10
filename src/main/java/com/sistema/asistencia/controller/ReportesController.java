@@ -2,10 +2,11 @@ package com.sistema.asistencia.controller;
 
 import com.sistema.asistencia.model.dao.SeccionDAO;
 import com.sistema.asistencia.model.entity.Seccion;
-import com.sistema.asistencia.service.ReporteExcelService; // Importación corregida a tu ruta exacta
+import com.sistema.asistencia.service.ReporteExcelService;
 import com.sistema.asistencia.view.FrmReportes;
 
 import javax.swing.*;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -44,7 +45,12 @@ public class ReportesController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == vista.btnCerrar) {
-            vista.dispose();
+            Container padre = vista.getParent();
+            if (padre != null) {
+                padre.remove(vista);
+                padre.revalidate();
+                padre.repaint();
+            }
         } else if (e.getSource() == vista.btnExportarExcel) {
             ejecutarProcesoExportacion();
         }
@@ -75,7 +81,6 @@ public class ReportesController implements ActionListener {
             }
 
             try {
-                // Invocación segura con el empaquetado correcto
                 ReporteExcelService.exportarAsistenciaSeccion(idSeccionReal, rutaAbsoluta);
                 
                 JOptionPane.showMessageDialog(vista, 

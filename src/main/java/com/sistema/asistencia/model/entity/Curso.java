@@ -5,17 +5,18 @@ public class Curso {
     private String codigoCurso;
     private String nombreCurso;
     private int creditos;
+    private int horasTotales;
 
     public Curso() {}
 
-    public Curso(int idCurso, String codigoCurso, String nombreCurso, int creditos) {
+    public Curso(int idCurso, String codigoCurso, String nombreCurso, int creditos, int horasTotales) {
         this.idCurso = idCurso;
         this.codigoCurso = codigoCurso;
         this.nombreCurso = nombreCurso;
         this.creditos = creditos;
+        this.horasTotales = horasTotales;
     }
 
-    // Métodos Getters y Setters exactos
     public int getIdCurso() { return idCurso; }
     public void setIdCurso(int idCurso) { this.idCurso = idCurso; }
 
@@ -27,4 +28,13 @@ public class Curso {
 
     public int getCreditos() { return creditos; }
     public void setCreditos(int creditos) { this.creditos = creditos; }
+
+    public int getHorasTotales() { return horasTotales; }
+    public void setHorasTotales(int horasTotales) { this.horasTotales = horasTotales; }
+
+    public String getCodigo() { return getCodigoCurso(); }
+    public void setCodigo(String codigo) { setCodigoCurso(codigo); }
+
+    public String getNombre() { return getNombreCurso(); }
+    public void setNombre(String nombre) { setNombreCurso(nombre); }
 }

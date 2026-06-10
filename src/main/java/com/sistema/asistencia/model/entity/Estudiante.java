@@ -2,11 +2,11 @@ package com.sistema.asistencia.model.entity;
 
 public class Estudiante {
     private int idEstudiante;
-    private String codigoEstudiante; // Ej: U23238701
+    private String codigoEstudiante; 
     private String nombres;
     private String apellidos;
     private String correo;
-    private String estadoAcademico; // 'Regular' o 'Inhabilitado'
+    private String estadoAcademico; 
 
     public Estudiante() {}
 
@@ -20,7 +20,7 @@ public class Estudiante {
         this.estadoAcademico = estadoAcademico;
     }
 
-    // Getters y Setters
+    
     public int getIdEstudiante() { return idEstudiante; }
     public void setIdEstudiante(int idEstudiante) { this.idEstudiante = idEstudiante; }
 

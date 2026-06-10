@@ -6,22 +6,24 @@ public class Seccion {
     private int idDocente;
     private String codigoSeccion;
     private String periodoAcademico;
+    private String aula;
     
-    // Atributos adicionales para facilitar el renderizado en la interfaz gráfica
+    
     private String nombreCurso;
     private String nombreDocente;
 
     public Seccion() {}
 
-    public Seccion(int idSeccion, int idCurso, int idDocente, String codigoSeccion, String periodoAcademico) {
+    public Seccion(int idSeccion, int idCurso, int idDocente, String codigoSeccion, String periodoAcademico, String aula) {
         this.idSeccion = idSeccion;
         this.idCurso = idCurso;
         this.idDocente = idDocente;
         this.codigoSeccion = codigoSeccion;
         this.periodoAcademico = periodoAcademico;
+        this.aula = aula;
     }
 
-    // Getters y Setters
+    
     public int getIdSeccion() { return idSeccion; }
     public void setIdSeccion(int idSeccion) { this.idSeccion = idSeccion; }
 
@@ -36,6 +38,9 @@ public class Seccion {
 
     public String getPeriodoAcademico() { return periodoAcademico; }
     public void setPeriodoAcademico(String periodoAcademico) { this.periodoAcademico = periodoAcademico; }
+
+    public String getAula() { return aula; }
+    public void setAula(String aula) { this.aula = aula; }
 
     public String getNombreCurso() { return nombreCurso; }
     public void setNombreCurso(String nombreCurso) { this.nombreCurso = nombreCurso; }

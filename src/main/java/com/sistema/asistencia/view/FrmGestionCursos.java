@@ -4,134 +4,116 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class FrmGestionCursos extends JDialog {
 
-    // Componentes del Formulario de Entrada
-    public JTextField txtIdCurso; // Oculto o deshabilitado, sirve para las búsquedas y actualizaciones
+public class FrmGestionCursos extends JPanel {
+
+    public JTextField txtIdCurso;
     public JTextField txtCodigoCurso;
     public JTextField txtNombreCurso;
     public JSpinner spnCreditos;
     public JSpinner spnHoras;
-
-    // Botones de Operación CRUD
     public JButton btnRegistrar;
     public JButton btnModificar;
     public JButton btnEliminar;
     public JButton btnLimpiar;
-
-    // Tabla de Visualización
     public JTable tblCursos;
     public DefaultTableModel modeloTabla;
 
-    public FrmGestionCursos(Frame padre) {
-        super(padre, "Mantenimiento - Gestión de Cursos Globales", true);
-        setSize(850, 480);
-        setLocationRelativeTo(padre);
-        setResizable(false);
+    public FrmGestionCursos() {
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        setBackground(Color.WHITE);
 
-        // CONTENEDOR PRINCIPAL: Distribución por zonas divididas
-        JPanel panelPrincipal = new JPanel(new BorderLayout(15, 15));
-        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        panelPrincipal.setBackground(new Color(245, 247, 250));
+        
+        JPanel panelFormulario = new JPanel(null);
+        panelFormulario.setPreferredSize(new Dimension(280, 0));
+        panelFormulario.setBorder(BorderFactory.createTitledBorder(" Propiedades del Curso "));
+        panelFormulario.setOpaque(false);
 
-        // ==========================================
-        // 1. PANEL IZQUIERDO: Formulario de Registro
-        // ==========================================
-        JPanel panelFormulario = new JPanel(new GridBagLayout());
-        panelFormulario.setBorder(BorderFactory.createTitledBorder(" Datos de la Asignatura "));
-        panelFormulario.setPreferredSize(new Dimension(320, 400));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 6, 8, 6);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Campo ID (Invisible de resguardo técnico para el query UPDATE/DELETE)
         txtIdCurso = new JTextField();
         txtIdCurso.setVisible(false);
+        txtIdCurso.setBounds(0, 0, 0, 0);
 
-        // Código del Curso (Ej: INF-401)
-        gbc.gridx = 0; gbc.gridy = 0;
-        panelFormulario.add(new JLabel("Código Curso:"), gbc);
+        JLabel lblCodigo = new JLabel("Código de Curso:");
+        lblCodigo.setBounds(15, 30, 250, 20);
         txtCodigoCurso = new JTextField();
-        gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 1.0;
-        panelFormulario.add(txtCodigoCurso, gbc);
+        txtCodigoCurso.setBounds(15, 55, 240, 32);
+        txtCodigoCurso.putClientProperty("JComponent.roundRect", true);
+        txtCodigoCurso.putClientProperty("JTextField.placeholderText", "Ej: INF-401");
 
-        // Nombre del Curso
-        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.0;
-        panelFormulario.add(new JLabel("Nombre Curso:"), gbc);
+        JLabel lblNombre = new JLabel("Nombre de la Asignatura:");
+        lblNombre.setBounds(15, 95, 250, 20);
         txtNombreCurso = new JTextField();
-        gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 1.0;
-        panelFormulario.add(txtNombreCurso, gbc);
+        txtNombreCurso.setBounds(15, 120, 240, 32);
+        txtNombreCurso.putClientProperty("JComponent.roundRect", true);
 
-        // Créditos Académicos (Spinner Numérico limitado)
-        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.0;
-        panelFormulario.add(new JLabel("Créditos:"), gbc);
+        JLabel lblCreditos = new JLabel("Créditos:");
+        lblCreditos.setBounds(15, 160, 250, 20);
         spnCreditos = new JSpinner(new SpinnerNumberModel(4, 1, 10, 1));
-        gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1.0;
-        panelFormulario.add(spnCreditos, gbc);
+        spnCreditos.setBounds(15, 185, 240, 32);
+        spnCreditos.putClientProperty("JComponent.roundRect", true);
 
-        // Horas Totales del Ciclo
-        gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0.0;
-        panelFormulario.add(new JLabel("Horas Totales:"), gbc);
-        spnHoras = new JSpinner(new SpinnerNumberModel(64, 16, 128, 2));
-        gbc.gridx = 1; gbc.gridy = 3; gbc.weightx = 1.0;
-        panelFormulario.add(spnHoras, gbc);
+        JLabel lblHoras = new JLabel("Horas Totales:");
+        lblHoras.setBounds(15, 225, 250, 20);
+        spnHoras = new JSpinner(new SpinnerNumberModel(64, 1, 200, 1));
+        spnHoras.setBounds(15, 250, 240, 32);
+        spnHoras.putClientProperty("JComponent.roundRect", true);
 
-        // Bloque de Botones de Acción apilados horizontalmente en la parte inferior del formulario
-        JPanel panelBotonesForm = new JPanel(new GridLayout(2, 2, 8, 8));
-        panelBotonesForm.setOpaque(false);
-        
-        btnRegistrar = new JButton("Registrar");
-        btnRegistrar.setBackground(new Color(28, 112, 219)); // Azul Institucional
+        btnRegistrar = new JButton("Guardar Curso");
+        btnRegistrar.setBackground(new Color(25, 135, 84));
         btnRegistrar.setForeground(Color.WHITE);
-        
-        btnModificar = new JButton("Modificar");
-        btnEliminar = new JButton("Eliminar");
-        btnEliminar.setBackground(new Color(231, 76, 60)); // Rojo Alerta
+        btnRegistrar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnRegistrar.setBounds(15, 300, 240, 35);
+        btnRegistrar.putClientProperty("JButton.buttonType", "roundRect");
+
+        btnModificar = new JButton("Modificar Curso");
+        btnModificar.setBackground(new Color(255, 193, 7));
+        btnModificar.setForeground(Color.BLACK);
+        btnModificar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnModificar.setBounds(15, 345, 240, 35);
+        btnModificar.putClientProperty("JButton.buttonType", "roundRect");
+
+        btnEliminar = new JButton("Eliminar Curso");
+        btnEliminar.setBackground(new Color(220, 53, 69));
         btnEliminar.setForeground(Color.WHITE);
-        
+        btnEliminar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnEliminar.setBounds(15, 390, 240, 35);
+        btnEliminar.putClientProperty("JButton.buttonType", "roundRect");
+
         btnLimpiar = new JButton("Limpiar");
+        btnLimpiar.setBounds(15, 435, 240, 30);
+        btnLimpiar.putClientProperty("JButton.buttonType", "roundRect");
 
-        panelBotonesForm.add(btnRegistrar);
-        panelBotonesForm.add(btnModificar);
-        panelBotonesForm.add(btnEliminar);
-        panelBotonesForm.add(btnLimpiar);
+        panelFormulario.add(txtIdCurso);
+        panelFormulario.add(lblCodigo); panelFormulario.add(txtCodigoCurso);
+        panelFormulario.add(lblNombre); panelFormulario.add(txtNombreCurso);
+        panelFormulario.add(lblCreditos); panelFormulario.add(spnCreditos);
+        panelFormulario.add(lblHoras); panelFormulario.add(spnHoras);
+        panelFormulario.add(btnRegistrar);
+        panelFormulario.add(btnModificar);
+        panelFormulario.add(btnEliminar);
+        panelFormulario.add(btnLimpiar);
+        add(panelFormulario, BorderLayout.WEST);
 
-        // Colocar los botones en el layout del formulario
-        gbc.gridx = 0; gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        gbc.insets = new Insets(25, 6, 5, 6);
-        panelFormulario.add(panelBotonesForm, gbc);
-
-        panelPrincipal.add(panelFormulario, BorderLayout.WEST);
-
-        // ==========================================
-        // 2. PANEL DER/CENTRO: Cuadrícula JTable
-        // ==========================================
+        
         JPanel panelTabla = new JPanel(new BorderLayout());
-        panelTabla.setBorder(BorderFactory.createTitledBorder(" Asignaturas Registradas en el Sistema "));
+        panelTabla.setBorder(BorderFactory.createTitledBorder(" Cursos Activos en Base de Datos "));
+        panelTabla.setOpaque(false);
 
-        String[] columnas = {"ID", "Código", "Nombre del Curso", "Créditos", "Horas"};
+        String[] columnas = {"ID", "Código", "Nombre del Curso", "Créditos", "Horas Totales"};
         modeloTabla = new DefaultTableModel(null, columnas) {
             @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Bloquea la edición directa sobre las celdas de la cuadrícula
-            }
+            public boolean isCellEditable(int r, int c) { return false; }
         };
 
         tblCursos = new JTable(modeloTabla);
-        tblCursos.setRowHeight(24);
-        tblCursos.getTableHeader().setReorderingAllowed(false);
-        
-        // Ocultamos la columna ID para fines visuales pero la mantenemos mapeada en el modelo indexado
-        tblCursos.getColumnModel().getColumn(0).setMinWidth(0);
-        tblCursos.getColumnModel().getColumn(0).setMaxWidth(0);
-        tblCursos.getColumnModel().getColumn(0).setPreferredWidth(0);
+        tblCursos.setRowHeight(26);
+        tblCursos.putClientProperty("JTable.showHorizontalLines", true);
+        tblCursos.putClientProperty("JTable.showVerticalLines", false);
+        tblCursos.putClientProperty("JTable.intercellSpacing", new Dimension(0, 0));
 
         JScrollPane scroll = new JScrollPane(tblCursos);
         panelTabla.add(scroll, BorderLayout.CENTER);
-        
-        panelPrincipal.add(panelTabla, BorderLayout.CENTER);
-
-        add(panelPrincipal);
+        add(panelTabla, BorderLayout.CENTER);
     }
 }

@@ -9,7 +9,6 @@ import java.util.List;
 
 public class UsuarioDAO {
 
-    // Método para insertar un usuario respetando tu ENUM y columnas reales
     public void insertar(Usuario usuario) throws SQLException {
         String sql = "INSERT INTO Usuario (codigo_trabajador, nombres, apellidos, correo, contrasena, rol, estado) " +
                      "VALUES (?, ?, ?, ?, ?, ?::rol_usuario, ?)";
@@ -22,14 +21,14 @@ public class UsuarioDAO {
             ps.setString(3, usuario.getApellidos());
             ps.setString(4, usuario.getCorreo());
             ps.setString(5, usuario.getContrasena());
-            ps.setString(6, usuario.getRol()); // Debe enviarse 'Administrador' o 'Docente'
+            ps.setString(6, usuario.getRol()); 
             ps.setBoolean(7, usuario.isEstado());
             
             ps.executeUpdate();
         }
     }
 
-    // Método para listar todos los usuarios del sistema
+    
     public List<Usuario> listar() throws SQLException {
         List<Usuario> lista = new ArrayList<>();
         String sql = "SELECT id_usuario, codigo_trabajador, nombres, apellidos, correo, contrasena, " +
@@ -47,7 +46,7 @@ public class UsuarioDAO {
                 u.setApellidos(rs.getString("apellidos"));
                 u.setCorreo(rs.getString("correo"));
                 u.setContrasena(rs.getString("contrasena"));
-                u.setRol(rs.getString("rol_texto")); // Captura el ENUM como texto limpio
+                u.setRol(rs.getString("rol_texto")); 
                 u.setEstado(rs.getBoolean("estado"));
                 lista.add(u);
             }

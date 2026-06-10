@@ -5,18 +5,18 @@ import java.sql.Time;
 public class Horario {
     private int idHorario;
     private int idSeccion;
-    private String diaSemana; // Mapeará con tu dia_semana_enum
+    private String diaSemana; 
     private Time horaInicio;
     private Time horaFin;
     private String aula;
 
-    // Atributos auxiliares para visualización en UI
+    
     private String codigoSeccion;
     private String nombreCurso;
 
     public Horario() {}
 
-    // Getters y Setters
+    
     public int getIdHorario() { return idHorario; }
     public void setIdHorario(int idHorario) { this.idHorario = idHorario; }
 

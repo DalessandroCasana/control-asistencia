@@ -17,7 +17,7 @@ public class GestionSeccionesController implements ActionListener {
     private final FrmGestionSecciones vista;
     private final SeccionDAO seccionDAO;
     
-    // Listas en memoria para recordar las IDs originales de PostgreSQL
+    
     private List<Curso> listaCursosCache;
     private List<Usuario> listaDocentesCache;
 
@@ -25,19 +25,18 @@ public class GestionSeccionesController implements ActionListener {
         this.vista = vista;
         this.seccionDAO = new SeccionDAO();
 
-        // Suscribir eventos
+        
         this.vista.btnGuardar.addActionListener(this);
         this.vista.btnLimpiar.addActionListener(this);
-        this.vista.btnCerrar.addActionListener(this);
 
-        // Cargar componentes de datos
+        
         inicializarCombos();
         refrescarTabla();
     }
 
     private void inicializarCombos() {
         try {
-            // 1. Cargar combo Cursos
+            
             vista.cboCursos.removeAllItems();
             vista.cboCursos.addItem("-- Seleccione un Curso --");
             listaCursosCache = seccionDAO.listarCursosAux();
@@ -45,7 +44,7 @@ public class GestionSeccionesController implements ActionListener {
                 vista.cboCursos.addItem(c.getNombreCurso() + " (" + c.getCodigoCurso() + ")");
             }
 
-            // 2. Cargar combo Docentes
+            
             vista.cboDocentes.removeAllItems();
             vista.cboDocentes.addItem("-- Seleccione un Docente --");
             listaDocentesCache = seccionDAO.listarDocentesAux();
@@ -79,9 +78,7 @@ public class GestionSeccionesController implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == vista.btnCerrar) {
-            vista.dispose();
-        } else if (e.getSource() == vista.btnLimpiar) {
+        if (e.getSource() == vista.btnLimpiar) {
             limpiarFormulario();
         } else if (e.getSource() == vista.btnGuardar) {
             ejecutarRegistroSeccion();
@@ -106,7 +103,7 @@ public class GestionSeccionesController implements ActionListener {
             return;
         }
 
-        // Obtención de IDs reales usando el caché sincronizado
+        
         int idCursoReal = listaCursosCache.get(indexCurso - 1).getIdCurso();
         int idDocenteReal = listaDocentesCache.get(indexDocente - 1).getIdUsuario();
 

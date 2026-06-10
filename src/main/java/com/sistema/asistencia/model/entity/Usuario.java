@@ -12,7 +12,7 @@ public class Usuario {
 
     public Usuario() {}
 
-    // Métodos Getters y Setters exactos
+    
     public int getIdUsuario() { return idUsuario; }
     public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
 

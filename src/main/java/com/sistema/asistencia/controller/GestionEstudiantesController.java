@@ -16,13 +16,13 @@ public class GestionEstudiantesController implements ActionListener {
     public GestionEstudiantesController(FrmGestionEstudiantes vista) {
         this.vista = vista;
 
-        // Suscribir escuchadores de botones
+        
         this.vista.btnRegistrar.addActionListener(this);
         this.vista.btnModificar.addActionListener(this);
         this.vista.btnEliminar.addActionListener(this);
         this.vista.btnLimpiar.addActionListener(this);
 
-        // Escuchador de selección en la tabla
+        
         this.vista.tblEstudiantes.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -34,7 +34,7 @@ public class GestionEstudiantesController implements ActionListener {
     }
 
     private void inicializarTablaPrueba() {
-        // Carga inicial simulada de estudiantes
+        
         vista.modeloTabla.addRow(new Object[]{contadorIdSimulado++, "U20261102", "Juan Alberto", "Pérez Ramos", "U20261102@utp.edu.pe", "Activo"});
         vista.modeloTabla.addRow(new Object[]{contadorIdSimulado++, "U20261105", "María Fernanda", "Sánchez Vega", "U20261105@utp.edu.pe", "Activo"});
     }
@@ -61,7 +61,7 @@ public class GestionEstudiantesController implements ActionListener {
         String correo = vista.txtCorreo.getText().trim();
         String estado = vista.cboEstado.getSelectedItem().toString();
 
-        // VALIDACIÓN CON APACHE COMMONS
+        
         if (StringUtils.isBlank(codigo) || StringUtils.isBlank(nombres) || 
             StringUtils.isBlank(apellidos) || StringUtils.isBlank(correo)) {
             JOptionPane.showMessageDialog(vista, "Por favor, complete todos los campos de la ficha del estudiante.", "Campos Vacíos", JOptionPane.WARNING_MESSAGE);

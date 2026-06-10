@@ -1,17 +1,17 @@
 package com.sistema.asistencia.model.dao;
 
 import com.sistema.asistencia.config.ConexionBD;
-import com.sistema.asistencia.model.entity.Curso; // Apunta correctamente a la subcarpeta entity
+import com.sistema.asistencia.model.entity.Curso; 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CursoDAO {
 
-    // 1. LISTAR TODOS LOS CURSOS
+    
     public List<Curso> listar() {
         List<Curso> lista = new ArrayList<>();
-        String sql = "SELECT id_curso, codigo, nombre, creditos, horas_totales FROM curso ORDER BY nombre ASC";
+        String sql = "SELECT id_curso, codigo_curso, nombre_curso, creditos, horas_totales FROM curso ORDER BY nombre_curso ASC";
 
         try (Connection cn = ConexionBD.obtenerConexion();
              PreparedStatement ps = cn.prepareStatement(sql);
@@ -20,8 +20,8 @@ public class CursoDAO {
             while (rs.next()) {
                 Curso c = new Curso();
                 c.setIdCurso(rs.getInt("id_curso"));
-                c.setCodigo(rs.getString("codigo"));
-                c.setNombre(rs.getString("nombre"));
+                c.setCodigo(rs.getString("codigo_curso"));
+                c.setNombre(rs.getString("nombre_curso"));
                 c.setCreditos(rs.getInt("creditos"));
                 c.setHorasTotales(rs.getInt("horas_totales"));
                 lista.add(c);
@@ -32,7 +32,7 @@ public class CursoDAO {
         return lista;
     }
 
-    // 2. REGISTRAR NUEVO CURSO (INSERT)
+    
     public boolean registrar(Curso curso) {
         String sql = "INSERT INTO curso (codigo, nombre, creditos, horas_totales) VALUES (?, ?, ?, ?)";
         
@@ -51,7 +51,7 @@ public class CursoDAO {
         }
     }
 
-    // 3. MODIFICAR CURSO EXISTENTE (UPDATE)
+    
     public boolean modificar(Curso curso) {
         String sql = "UPDATE curso SET codigo = ?, nombre = ?, creditos = ?, horas_totales = ? WHERE id_curso = ?";
         
@@ -71,7 +71,7 @@ public class CursoDAO {
         }
     }
 
-    // 4. ELIMINAR CURSO (DELETE)
+    
     public boolean eliminar(int idCurso) {
         String sql = "DELETE FROM curso WHERE id_curso = ?";
         

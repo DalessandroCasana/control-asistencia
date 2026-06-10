@@ -17,42 +17,34 @@ public class DashboardDocenteController implements ActionListener {
 
     private final FrmDashboardDocente vista;
     private final SeccionDAO seccionDAO;
-    private final int idDocenteLogueado; // Recibido desde el Login al autenticar
+    private final int idDocenteLogueado; 
 
     public DashboardDocenteController(FrmDashboardDocente vista, int idDocente, String nombreDocente) {
         this.vista = vista;
         this.seccionDAO = new SeccionDAO();
         this.idDocenteLogueado = idDocente;
 
-        // Personalizar bienvenida en la interfaz
         this.vista.lblBienvenida.setText("Bienvenido(a): " + nombreDocente);
 
-        // Suscribir escuchadores de la vista docente
         this.vista.btnIniciarAsistencia.addActionListener(this);
         this.vista.btnCerrarSesion.addActionListener(this);
 
-        // Cargar la agenda inteligente del día
         determinarDiaYListarAgenda();
     }
 
     private void determinarDiaYListarAgenda() {
-        // 1. Calculamos el día de la semana actual del sistema
         LocalDate hoy = LocalDate.now();
         String diaSemana = hoy.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.forLanguageTag("es-ES"));
         
-        // Capitalizamos la primera letra (ej: "lunes" -> "Lunes") para que coincida con la BD
         diaSemana = diaSemana.substring(0, 1).toUpperCase() + diaSemana.substring(1);
         
-        // Colocamos el texto informativo en la interfaz gráfica
         vista.lblFechaActual.setText("Agenda de Hoy: " + diaSemana + " " + hoy);
 
-        // 2. Limpiamos la JTable e inyectamos los registros reales desde PostgreSQL
         vista.modeloTabla.setRowCount(0);
         
         List<Seccion> agendaHoy = seccionDAO.listarPorDocenteYDia(idDocenteLogueado, diaSemana);
         
         if (agendaHoy.isEmpty()) {
-            // Si el docente no tiene clases hoy, mandamos un aviso limpio en la primera fila
             vista.modeloTabla.addRow(new Object[]{"", "No registra clases programadas para el día de hoy", "", ""});
             vista.btnIniciarAsistencia.setEnabled(false);
         } else {
@@ -61,7 +53,7 @@ public class DashboardDocenteController implements ActionListener {
                 vista.modeloTabla.addRow(new Object[]{
                     s.getIdSeccion(),
                     s.getCodigoSeccion() + " - " + s.getNombreCurso(),
-                    s.getNombreDocente(), // Trae formateado el intervalo "HH:mm - HH:mm"
+                    s.getNombreDocente(), 
                     s.getAula()
                 });
             }
@@ -100,9 +92,9 @@ public class DashboardDocenteController implements ActionListener {
     int idSeccionSeleccionada = Integer.parseInt(idObj.toString());
     String datosClase = vista.modeloTabla.getValueAt(fila, 1).toString();
 
-    // ENLAZAR MÓDULO INTERACTIVO: Instanciamos la modal pasándole la vista actual como padre
+    
     com.sistema.asistencia.view.FrmTomaAsistencia frmToma = new com.sistema.asistencia.view.FrmTomaAsistencia(vista, datosClase);
     new TomaAsistenciaController(frmToma, idSeccionSeleccionada);
-    frmToma.setVisible(true); // Al ser modal, detiene el hilo de ejecución hasta que se cierre
+    frmToma.setVisible(true); 
     }
 }

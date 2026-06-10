@@ -3,22 +3,22 @@ package com.sistema.asistencia.model.entity;
 import java.time.LocalDate;
 
 public class SesionClase {
-    // Enum para acoplarlo al tipo ENUM 'estado_sesion_enum' de PostgreSQL
+    
     public enum EstadoSesion {
         Abierta, Cerrada
     }
 
     private int idSesion;
-    private Seccion seccion;   // Relación orientada a objetos con la Sección
-    private Horario horario;   // Relación orientada a objetos con el Horario específico
-    private LocalDate fecha;   // Ej: 2026-06-08
-    private String temaDictado; // Registro pedagógico de la clase
-    private EstadoSesion estadoSesion; // Abierta o Cerrada
+    private Seccion seccion;   
+    private Horario horario;   
+    private LocalDate fecha;   
+    private String temaDictado; 
+    private EstadoSesion estadoSesion; 
 
-    // Constructor Vacío
+    
     public SesionClase() {}
 
-    // Constructor Completo
+    
     public SesionClase(int idSesion, Seccion seccion, Horario horario, LocalDate fecha, 
                        String temaDictado, EstadoSesion estadoSesion) {
         this.idSesion = idSesion;
@@ -29,7 +29,7 @@ public class SesionClase {
         this.estadoSesion = estadoSesion;
     }
 
-    // Métodos Getters y Setters
+    
     public int getIdSesion() { return idSesion; }
     public void setIdSesion(int idSesion) { this.idSesion = idSesion; }
 

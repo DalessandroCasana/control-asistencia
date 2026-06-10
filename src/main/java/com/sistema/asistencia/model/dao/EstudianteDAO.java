@@ -2,7 +2,7 @@ package com.sistema.asistencia.model.dao;
 
 import com.sistema.asistencia.config.ConexionBD;
 import com.sistema.asistencia.model.entity.Estudiante;
-import com.google.common.base.Preconditions; // Uso de Google Guava
+import com.google.common.base.Preconditions; 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,13 +17,9 @@ public class EstudianteDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(EstudianteDAO.class);
 
-    /**
-     * Obtiene la lista de estudiantes matriculados en una sección específica para cargar la JTable del docente.
-     * @param idSeccion ID de la sección actual.
-     * @return Lista de objetos Estudiante vinculados.
-     */
+    
     public List<Estudiante> listarPorSeccion(int idSeccion) {
-        // Validación con Guava: El ID de la sección debe ser un entero positivo válido
+        
         Preconditions.checkArgument(idSeccion > 0, "El ID de la sección debe ser mayor a cero.");
 
         List<Estudiante> lista = new ArrayList<>();
@@ -62,33 +58,28 @@ public class EstudianteDAO {
         return lista;
     }
 
-    /**
-     * REGLA DE NEGOCIO CRÍTICA (Fase 4): Verifica el porcentaje de faltas de un alumno 
-     * en una sección y lo inhabilita automáticamente si supera el 30%.
-     * @param idEstudiante ID del alumno evaluado.
-     * @param idSeccion ID de la sección evaluada.
-     */
+    
     public void verificarYActualizarInhabilitacion(int idEstudiante, int idSeccion) {
-        // Validaciones previas con Guava
+        
         Preconditions.checkArgument(idEstudiante > 0, "ID de estudiante inválido.");
         Preconditions.checkArgument(idSeccion > 0, "ID de sección inválido.");
 
-        // SQL 1: Cuenta el total de sesiones dictadas a la fecha para esa sección
+        
         String sqlTotalSesiones = "SELECT COUNT(*) FROM Sesion_Clase WHERE id_seccion = ? AND estado_sesion = 'Cerrada'";
         
-        // SQL 2: Suma el peso de las ausencias del alumno (Donde Ausente vale 0.00 en la BD, sumamos los registros con id_estado = 2)
+        
         String sqlTotalAusencias = "SELECT COUNT(*) FROM Detalle_Asistencia da " +
                                    "INNER JOIN Sesion_Clase sc ON da.id_sesion = sc.id_sesion " +
                                    "WHERE sc.id_seccion = ? AND da.id_estudiante = ? AND da.id_estado = 2";
 
-        // SQL 3: Actualiza el estado en la tabla intermedia Matricula si excede el límite
+        
         String sqlInhabilitar = "UPDATE Matricula SET estado_matricula = 'Inhabilitado' WHERE id_seccion = ? AND id_estudiante = ?";
 
         try (Connection conn = ConexionBD.obtenerConexion()) {
             int totalSesiones = 0;
             int totalAusencias = 0;
 
-            // 1. Obtener total sesiones
+            
             try (PreparedStatement ps1 = conn.prepareStatement(sqlTotalSesiones)) {
                 ps1.setInt(1, idSeccion);
                 try (ResultSet rs1 = ps1.executeQuery()) {
@@ -96,10 +87,10 @@ public class EstudianteDAO {
                 }
             }
 
-            // Si no hay sesiones cerradas aún, no se puede calcular porcentajes
+            
             if (totalSesiones == 0) return;
 
-            // 2. Obtener total ausencias
+            
             try (PreparedStatement ps2 = conn.prepareStatement(sqlTotalAusencias)) {
                 ps2.setInt(1, idSeccion);
                 ps2.setInt(2, idEstudiante);
@@ -108,12 +99,12 @@ public class EstudianteDAO {
                 }
             }
 
-            // 3. Aplicar fórmula matemática exacta del requerimiento
+            
             double porcentajeFaltas = ((double) totalAusencias / totalSesiones) * 100;
             logger.info("Evaluación de riesgo - Alumno ID {}: {} ausencias de {} clases ({}%)", 
                         idEstudiante, totalAusencias, totalSesiones, String.format("%.2f", porcentajeFaltas));
 
-            // REGLA INSTITUCIONAL: Límite del 30% de inasistencias
+            
             if (porcentajeFaltas > 30.0) {
                 try (PreparedStatement ps3 = conn.prepareStatement(sqlInhabilitar)) {
                     ps3.setInt(1, idSeccion);

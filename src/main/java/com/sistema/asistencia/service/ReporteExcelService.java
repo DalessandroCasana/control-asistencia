@@ -15,9 +15,9 @@ public class ReporteExcelService {
             Sheet hojaResumen = libro.createSheet("Resumen de Asistencia");
             hojaResumen.setDisplayGridlines(true); 
 
-            // Configuración de la Fuente usando los métodos correctos de Apache POI 5.x
+            
             Font fontHeader = libro.createFont();
-            fontHeader.setFontName("Calibri"); // CORREGIDO: setFontName en lugar de setName
+            fontHeader.setFontName("Calibri"); 
             fontHeader.setFontHeightInPoints((short) 11);
             fontHeader.setBold(true);
             fontHeader.setColor(IndexedColors.WHITE.getIndex());
@@ -76,7 +76,7 @@ public class ReporteExcelService {
                     }
                 }
             } catch (SQLException e) {
-                // Bloque de contingencia con datos Mock si la consulta SQL falla o no tiene registros
+                
                 Row filaMock = hojaResumen.createRow(1);
                 filaMock.createCell(0).setCellValue(10);
                 filaMock.createCell(1).setCellValue("U20265501");

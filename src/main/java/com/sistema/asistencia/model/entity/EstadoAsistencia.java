@@ -2,8 +2,8 @@ package com.sistema.asistencia.model.entity;
 
 public class EstadoAsistencia {
     private int idEstado;
-    private String nombreEstado; // Presente, Ausente, Tardanza, Falta Justificada
-    private double valorAsistencia; // 1.00, 0.00, 0.50, 1.00
+    private String nombreEstado; 
+    private double valorAsistencia; 
 
     public EstadoAsistencia() {}
 
@@ -13,7 +13,7 @@ public class EstadoAsistencia {
         this.valorAsistencia = valorAsistencia;
     }
 
-    // Getters y Setters
+    
     public int getIdEstado() { return idEstado; }
     public void setIdEstado(int idEstado) { this.idEstado = idEstado; }
 

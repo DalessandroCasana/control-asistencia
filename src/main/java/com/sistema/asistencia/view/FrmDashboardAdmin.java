@@ -1,77 +1,144 @@
 package com.sistema.asistencia.view;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class FrmDashboardAdmin extends JFrame {
 
-    // Componentes públicos para el enlace del controlador
     public JButton btnCursos;
     public JButton btnSecciones;
     public JButton btnHorarios;
-    public JButton btnReportes; // El botón del error
+    public JButton btnReportes;
     public JButton btnCerrarSesion;
+    public JLabel lblBienvenida;
+    
+    
+    public JPanel areaContenido; 
 
     public FrmDashboardAdmin() {
-        setTitle("Panel de Control del Administrador - Sistema de Asistencia");
-        setSize(700, 500);
+        setTitle("Panel de Control General - Sistema de Asistencia");
+        setSize(1100, 650); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false);
 
-        // Contenedor principal
-        JPanel panelPrincipal = new JPanel(new BorderLayout(15, 15));
-        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        panelPrincipal.setBackground(new Color(236, 240, 241));
+        JPanel panelPrincipal = new JPanel(new BorderLayout());
+        panelPrincipal.setBackground(new Color(245, 246, 248));
 
-        // Encabezado
-        JLabel lblTitulo = new JLabel("MÓDULO DE GESTIÓN INSTITUCIONAL", JLabel.CENTER);
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblTitulo.setForeground(new Color(44, 62, 80));
-        panelPrincipal.add(lblTitulo, BorderLayout.NORTH);
-
-        // Panel de Menú (Cuadrícula de botones)
-        JPanel panelMenu = new JPanel(new GridLayout(2, 2, 15, 15));
-        panelMenu.setOpaque(false);
-
-        btnCursos = new JButton("Gestionar Cursos");
-        btnCursos.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnCursos.setBackground(new Color(52, 152, 219));
-        btnCursos.setForeground(Color.WHITE);
-
-        btnSecciones = new JButton("Gestionar Secciones");
-        btnSecciones.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnSecciones.setBackground(new Color(46, 204, 113));
-        btnSecciones.setForeground(Color.WHITE);
-
-        btnHorarios = new JButton("Asignar Horarios");
-        btnHorarios.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnHorarios.setBackground(new Color(155, 89, 182));
-        btnHorarios.setForeground(Color.WHITE);
-
-        btnReportes = new JButton("Reportes y Estadísticas"); // Nombre exacto unificado
-        btnReportes.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnReportes.setBackground(new Color(230, 126, 34));
-        btnReportes.setForeground(Color.WHITE);
-
-        panelMenu.add(btnCursos);
-        panelMenu.add(btnSecciones);
-        panelMenu.add(btnHorarios);
-        panelMenu.add(btnReportes);
-
-        panelPrincipal.add(panelMenu, BorderLayout.CENTER);
-
-        // Barra inferior para cerrar sesión
-        JPanel panelInferior = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        panelInferior.setOpaque(false);
         
-        btnCerrarSesion = new JButton("Cerrar Sesión");
-        btnCerrarSesion.setBackground(new Color(192, 57, 43));
-        btnCerrarSesion.setForeground(Color.WHITE);
-        
-        panelInferior.add(btnCerrarSesion);
-        panelPrincipal.add(panelInferior, BorderLayout.SOUTH);
+        JPanel sidebar = new JPanel();
+        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.setPreferredSize(new Dimension(260, 0));
+        sidebar.setBackground(new Color(33, 37, 41));
+        sidebar.setBorder(new EmptyBorder(25, 15, 25, 15));
 
+        
+        JLabel lblLogo = new JLabel("CONTROL ASISTENCIA");
+        lblLogo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblLogo.setForeground(Color.WHITE);
+        lblLogo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        JLabel lblRol = new JLabel("Módulo Administrador");
+        lblRol.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblRol.setForeground(new Color(173, 181, 189));
+        lblRol.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        sidebar.add(lblLogo);
+        sidebar.add(Box.createRigidArea(new Dimension(0, 5)));
+        sidebar.add(lblRol);
+        sidebar.add(Box.createRigidArea(new Dimension(0, 40)));
+
+        btnCursos = crearBotónSidebar("  Gestionar Cursos");
+        btnSecciones = crearBotónSidebar("  Planificar Secciones");
+        btnHorarios = crearBotónSidebar("  Asignar Horarios");
+        btnReportes = crearBotónSidebar("  Reportes");
+        
+        btnCerrarSesion = new JButton("  Cerrar Sesión");
+        btnCerrarSesion.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btnCerrarSesion.setForeground(new Color(220, 53, 69));
+        btnCerrarSesion.setBackground(new Color(33, 37, 41));
+        btnCerrarSesion.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnCerrarSesion.setBorderPainted(false);
+        btnCerrarSesion.setFocusPainted(false);
+        btnCerrarSesion.setMaximumSize(new Dimension(230, 40));
+
+        sidebar.add(btnCursos); sidebar.add(Box.createRigidArea(new Dimension(0, 12)));
+        sidebar.add(btnSecciones); sidebar.add(Box.createRigidArea(new Dimension(0, 12)));
+        sidebar.add(btnHorarios); sidebar.add(Box.createRigidArea(new Dimension(0, 12)));
+        sidebar.add(btnReportes);
+        sidebar.add(Box.createVerticalGlue());
+        sidebar.add(btnCerrarSesion);
+
+        panelPrincipal.add(sidebar, BorderLayout.WEST);
+
+        
+        areaContenido = new JPanel(new BorderLayout());
+        areaContenido.setBackground(new Color(248, 249, 250));
+        areaContenido.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, new Color(222, 226, 230)));
+
+        
+        mostrarVistaBienvenida();
+
+        panelPrincipal.add(areaContenido, BorderLayout.CENTER);
         add(panelPrincipal);
+    }
+
+    
+    public void mostrarVistaBienvenida() {
+        areaContenido.removeAll();
+        
+        JPanel panelInicio = new JPanel(null);
+        panelInicio.setBackground(new Color(248, 249, 250));
+
+        JPanel tarjetaBienvenida = new JPanel(null);
+        tarjetaBienvenida.setBounds(40, 40, 720, 100);
+        tarjetaBienvenida.setBackground(Color.WHITE);
+        tarjetaBienvenida.setBorder(BorderFactory.createLineBorder(new Color(233, 236, 239), 1, true));
+        tarjetaBienvenida.putClientProperty("JComponent.roundRect", true);
+
+        lblBienvenida = new JLabel("¡Bienvenido al Panel de Control Administrativo!");
+        lblBienvenida.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblBienvenida.setForeground(new Color(33, 37, 41));
+        lblBienvenida.setBounds(20, 25, 600, 25);
+
+        JLabel lblSubtexto = new JLabel("Seleccione una opción del menú lateral izquierdo para gestionar la planificación académica.");
+        lblSubtexto.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblSubtexto.setForeground(new Color(108, 117, 125));
+        lblSubtexto.setBounds(20, 50, 600, 20);
+
+        tarjetaBienvenida.add(lblBienvenida);
+        tarjetaBienvenida.add(lblSubtexto);
+        panelInicio.add(tarjetaBienvenida);
+
+        JPanel tarjetaInfo = new JPanel(null);
+        tarjetaInfo.setBounds(40, 170, 720, 380);
+        tarjetaInfo.setBackground(Color.WHITE);
+        tarjetaInfo.setBorder(BorderFactory.createLineBorder(new Color(233, 236, 239), 1, true));
+        
+        JLabel lblStatus = new JLabel("Estado del Sistema: Operacional y Conectado a PostgreSQL");
+        lblStatus.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblStatus.setForeground(new Color(40, 167, 69));
+        lblStatus.setBounds(25, 25, 500, 20);
+        tarjetaInfo.add(lblStatus);
+        
+        panelInicio.add(tarjetaInfo);
+
+        areaContenido.add(panelInicio, BorderLayout.CENTER);
+        areaContenido.revalidate();
+        areaContenido.repaint();
+    }
+
+    private JButton crearBotónSidebar(String texto) {
+        JButton boton = new JButton(texto);
+        boton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        boton.setForeground(new Color(248, 249, 250));
+        boton.setBackground(new Color(43, 48, 53));
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        boton.setHorizontalAlignment(SwingConstants.LEFT);
+        boton.setMaximumSize(new Dimension(230, 42));
+        boton.setFocusPainted(false);
+        boton.setBorderPainted(false);
+        boton.putClientProperty("JButton.buttonType", "roundRect");
+        return boton;
     }
 }

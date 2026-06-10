@@ -11,7 +11,7 @@ import java.util.List;
 public class HorarioDAO {
 
     public void insertar(Horario horario) throws SQLException {
-        // Forzamos el casteo de dia_semana a tu tipo ENUM de Postgres con ::dia_semana_enum
+        
         String sql = "INSERT INTO Horario (id_seccion, dia_semana, hora_inicio, hora_fin, aula) " +
                      "VALUES (?, ?::dia_semana_enum, ?, ?, ?)";
         
@@ -47,7 +47,7 @@ public class HorarioDAO {
                 h.setIdSeccion(rs.getInt("id_seccion"));
                 h.setDiaSemana(rs.getString("dia"));
                 h.setHoraInicio(rs.getTime("hora_inicio"));
-                h.getHoraFin(); // Mapeo temporal
+                h.getHoraFin(); 
                 h.setHoraFin(rs.getTime("hora_fin"));
                 h.setAula(rs.getString("aula"));
                 h.setCodigoSeccion(rs.getString("codigo_seccion"));
@@ -58,7 +58,7 @@ public class HorarioDAO {
         return lista;
     }
 
-    // Listado auxiliar para llenar el combo de secciones disponibles
+    
     public List<Seccion> listarSeccionesAux() throws SQLException {
         List<Seccion> lista = new ArrayList<>();
         String sql = "SELECT s.id_seccion, s.codigo_seccion, c.nombre_curso " +

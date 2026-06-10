@@ -1,7 +1,7 @@
 package com.sistema.asistencia.controller;
 
-import com.sistema.asistencia.model.dao.CursoDAO;       // Ruta corregida según subcarpetas
-import com.sistema.asistencia.model.entity.Curso;    // Ruta corregida según subcarpetas
+import com.sistema.asistencia.model.dao.CursoDAO;       
+import com.sistema.asistencia.model.entity.Curso;   
 import com.sistema.asistencia.view.FrmGestionCursos;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,15 +19,15 @@ public class GestionCursosController implements ActionListener {
 
     public GestionCursosController(FrmGestionCursos vista) {
         this.vista = vista;
-        this.cursoDAO = new CursoDAO(); // Instanciación del motor analítico de datos
+        this.cursoDAO = new CursoDAO(); 
 
-        // Suscribir los componentes de la vista al controlador de eventos
+        
         this.vista.btnRegistrar.addActionListener(this);
         this.vista.btnModificar.addActionListener(this);
         this.vista.btnEliminar.addActionListener(this);
         this.vista.btnLimpiar.addActionListener(this);
 
-        // Suscribir el evento de escucha del mouse sobre la cuadrícula
+        
         this.vista.tblCursos.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -35,19 +35,19 @@ public class GestionCursosController implements ActionListener {
             }
         });
 
-        // Cargar y renderizar los datos desde la base de datos al inicializar el panel
+        
         listarCursosEnTabla();
     }
 
     private void listarCursosEnTabla() {
-        // Limpieza de resguardo para evitar la duplicidad visual de filas
+        
         vista.modeloTabla.setRowCount(0);
 
         try {
-            // Consultamos la tabla 'curso' en PostgreSQL de forma síncrona
+            
             List<Curso> lista = cursoDAO.listar();
             
-            // Inyección de objetos en la matriz de la JTable
+            
             for (Curso curso : lista) {
                 vista.modeloTabla.addRow(new Object[]{
                     curso.getIdCurso(),
@@ -85,7 +85,7 @@ public class GestionCursosController implements ActionListener {
         int creditos = (int) vista.spnCreditos.getValue();
         int horas = (int) vista.spnHoras.getValue();
 
-        // VALIDACIÓN CON APACHE COMMONS: Evitamos cadenas de puros espacios o nulas
+        
         if (StringUtils.isBlank(codigo) || StringUtils.isBlank(nombre)) {
             JOptionPane.showMessageDialog(vista, 
                 "Por favor, rellene los campos de Código y Nombre para continuar.", 
@@ -99,11 +99,11 @@ public class GestionCursosController implements ActionListener {
         nuevoCurso.setCreditos(creditos);
         nuevoCurso.setHorasTotales(horas);
 
-        // Envío transaccional hacia la base de datos
+        
         if (cursoDAO.registrar(nuevoCurso)) {
             JOptionPane.showMessageDialog(vista, "Curso registrado y guardado con éxito en PostgreSQL.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             limpiarFormulario();
-            listarCursosEnTabla(); // Refresco reactivo
+            listarCursosEnTabla(); 
         } else {
             JOptionPane.showMessageDialog(vista, "No se pudo registrar la asignatura. Revise la consola del servidor.", "Error de Persistencia", JOptionPane.ERROR_MESSAGE);
         }
@@ -126,7 +126,7 @@ public class GestionCursosController implements ActionListener {
         if (cursoDAO.modificar(cursoEditar)) {
             JOptionPane.showMessageDialog(vista, "Registro modificado satisfactoriamente en la base de datos.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             limpiarFormulario();
-            listarCursosEnTabla(); // Refresco reactivo
+            listarCursosEnTabla(); 
         } else {
             JOptionPane.showMessageDialog(vista, "Error al intentar actualizar la información del curso.", "Error de Actualización", JOptionPane.ERROR_MESSAGE);
         }
@@ -149,7 +149,7 @@ public class GestionCursosController implements ActionListener {
             if (cursoDAO.eliminar(idCurso)) {
                 JOptionPane.showMessageDialog(vista, "El registro ha sido removido de la base de datos.", "Eliminado", JOptionPane.INFORMATION_MESSAGE);
                 limpiarFormulario();
-                listarCursosEnTabla(); // Refresco reactivo
+                listarCursosEnTabla(); 
             } else {
                 JOptionPane.showMessageDialog(vista, "Error: No se pudo eliminar. El curso posee integridad referencial activa (llave foránea en uso).", "Restricción de BD", JOptionPane.ERROR_MESSAGE);
             }

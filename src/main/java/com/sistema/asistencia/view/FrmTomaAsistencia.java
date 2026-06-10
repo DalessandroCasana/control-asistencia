@@ -6,7 +6,7 @@ import java.awt.*;
 
 public class FrmTomaAsistencia extends JDialog {
 
-    // Componentes que controlará el Backend
+    
     public JLabel lblInfoClase;
     public JTable tblAlumnosAsistencia;
     public DefaultTableModel modeloTabla;
@@ -19,12 +19,12 @@ public class FrmTomaAsistencia extends JDialog {
         setLocationRelativeTo(padre);
         setResizable(false);
 
-        // Panel Principal
+        
         JPanel panelPrincipal = new JPanel(new BorderLayout(12, 12));
         panelPrincipal.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         panelPrincipal.setBackground(new Color(244, 246, 249));
 
-        // Header Informativo
+        
         JPanel panelHeader = new JPanel(new BorderLayout());
         panelHeader.setOpaque(false);
         
@@ -40,34 +40,34 @@ public class FrmTomaAsistencia extends JDialog {
         panelHeader.add(lblIndicacion, BorderLayout.SOUTH);
         panelPrincipal.add(panelHeader, BorderLayout.NORTH);
 
-        // Estructura de la Tabla JTable
+        
         String[] columnas = {"ID Alumno", "Código U", "Apellidos y Nombres", "Estado de Asistencia"};
         
-        // Sobrescribimos el modelo para permitir que la columna 3 (combos) sea editable
+        
         modeloTabla = new DefaultTableModel(null, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 3; // Solo la columna del combo es editable por el docente
+                return column == 3; 
             }
         };
 
         tblAlumnosAsistencia = new JTable(modeloTabla);
-        tblAlumnosAsistencia.setRowHeight(30); // Espacio óptimo para que quepa el ComboBox
+        tblAlumnosAsistencia.setRowHeight(30); 
         tblAlumnosAsistencia.getTableHeader().setReorderingAllowed(false);
 
-        // Ocultar la columna técnica ID Alumno
+        
         tblAlumnosAsistencia.getColumnModel().getColumn(0).setMinWidth(0);
         tblAlumnosAsistencia.getColumnModel().getColumn(0).setMaxWidth(0);
         tblAlumnosAsistencia.getColumnModel().getColumn(0).setPreferredWidth(0);
 
-        // TRUCO DE RENDERIZADO: Incrustar un JComboBox real dentro de la celda de la tabla
+        
         JComboBox<String> cboEstadosAsistencia = new JComboBox<>(new String[]{"Asistió", "Tardanza", "Faltó"});
         tblAlumnosAsistencia.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(cboEstadosAsistencia));
 
         JScrollPane scroll = new JScrollPane(tblAlumnosAsistencia);
         panelPrincipal.add(scroll, BorderLayout.CENTER);
 
-        // Panel de Control Inferior (Botones)
+        
         JPanel panelAcciones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         panelAcciones.setOpaque(false);
 

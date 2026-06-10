@@ -3,43 +3,71 @@ package com.sistema.asistencia.view;
 import javax.swing.*;
 import java.awt.*;
 
-public class FrmReportes extends JDialog {
+public class FrmReportes extends JPanel {
 
-    // Componentes públicos para que el controlador los pueda escuchar y leer
     public JComboBox<String> cboSeccionesReporte;
     public JButton btnExportarExcel;
     public JButton btnCerrar;
 
-    public FrmReportes(Frame padre) {
-        super(padre, "Módulo de Inteligencia de Datos - Reportes", true);
-        setSize(480, 220);
-        setLocationRelativeTo(padre);
-        setResizable(false);
+    public FrmReportes() {
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        setBackground(Color.WHITE);
 
-        JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        panel.setBackground(new Color(245, 247, 250));
+        
+        JLabel lblTitulo = new JLabel("Centro de Reportes y Estadísticas Consolidadas");
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        add(lblTitulo, BorderLayout.NORTH);
 
-        JLabel lblTitulo = new JLabel("Exportación de Reportes Consolidados", JLabel.CENTER);
-        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        lblTitulo.setForeground(new Color(44, 62, 80));
+        
+        JPanel panelContenido = new JPanel(null);
+        panelContenido.setOpaque(false);
+
+        JPanel tarjetaReporte = new JPanel(null);
+        tarjetaReporte.setBounds(20, 20, 500, 150);
+        tarjetaReporte.setBackground(new Color(248, 249, 250));
+        tarjetaReporte.setBorder(BorderFactory.createLineBorder(new Color(222, 226, 230), 1, true));
+        tarjetaReporte.putClientProperty("JComponent.roundRect", true);
+
+        JLabel lblDesc = new JLabel("Reporte General de Asistencia por Cursos Aperturados");
+        lblDesc.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblDesc.setBounds(20, 20, 450, 20);
+
+        JLabel lblSub = new JLabel("Genera un consolidado de porcentajes de faltas y asistencias.");
+        lblSub.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblSub.setForeground(Color.GRAY);
+        lblSub.setBounds(20, 45, 450, 20);
+
+        JLabel lblSeleccion = new JLabel("Seleccione la sección para exportar la asistencia:");
+        lblSeleccion.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblSeleccion.setBounds(20, 80, 450, 20);
 
         cboSeccionesReporte = new JComboBox<>();
-        cboSeccionesReporte.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        cboSeccionesReporte.setBounds(20, 105, 450, 32);
+        cboSeccionesReporte.putClientProperty("JComponent.roundRect", true);
 
-        btnExportarExcel = new JButton(" Generar Reporte Excel (.xlsx) ");
-        btnExportarExcel.setBackground(new Color(41, 128, 185));
+        btnExportarExcel = new JButton("Exportar Reporte a Excel");
+        btnExportarExcel.setBackground(new Color(25, 135, 84));
         btnExportarExcel.setForeground(Color.WHITE);
         btnExportarExcel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btnExportarExcel.setFocusPainted(false);
+        btnExportarExcel.setBounds(20, 150, 250, 35);
+        btnExportarExcel.putClientProperty("JButton.buttonType", "roundRect");
 
-        btnCerrar = new JButton("Cerrar Ventana");
+        btnCerrar = new JButton("Cerrar Reporte");
+        btnCerrar.setBackground(new Color(108, 117, 125));
+        btnCerrar.setForeground(Color.WHITE);
+        btnCerrar.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btnCerrar.setBounds(290, 150, 180, 35);
+        btnCerrar.putClientProperty("JButton.buttonType", "roundRect");
 
-        panel.add(lblTitulo);
-        panel.add(cboSeccionesReporte);
-        panel.add(btnExportarExcel);
-        panel.add(btnCerrar);
+        tarjetaReporte.add(lblDesc);
+        tarjetaReporte.add(lblSub);
+        tarjetaReporte.add(lblSeleccion);
+        tarjetaReporte.add(cboSeccionesReporte);
+        tarjetaReporte.add(btnExportarExcel);
+        tarjetaReporte.add(btnCerrar);
+        panelContenido.add(tarjetaReporte);
 
-        add(panel);
+        add(panelContenido, BorderLayout.CENTER);
     }
 }

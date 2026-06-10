@@ -39,8 +39,6 @@ public class LoginController implements ActionListener {
             return;
         }
 
-        // CONSULTA ADAPTADA A TU SCRIPT REAL DE POSTGRESQL
-        // Se extrae id_usuario, nombres, apellidos y el rol (que es un ENUM) convertido a TEXT.
         String sql = "SELECT id_usuario, nombres, apellidos, rol::TEXT AS rol_texto " +
                      "FROM Usuario WHERE correo = ? AND contrasena = ? AND estado = TRUE";
 
@@ -54,11 +52,11 @@ public class LoginController implements ActionListener {
                 if (rs.next()) {
                     int idUsuario = rs.getInt("id_usuario");
                     String nombreCompleto = rs.getString("nombres") + " " + rs.getString("apellidos");
-                    String rolObtenido = rs.getString("rol_texto"); // Captura 'Administrador' o 'Docente'
+                    String rolObtenido = rs.getString("rol_texto"); 
 
-                    vista.dispose(); // Cerrar ventana de login
+                    vista.dispose(); 
 
-                    // Filtro inteligente basado en tus ENUMS reales de base de datos
+                    
                     if ("Administrador".equalsIgnoreCase(rolObtenido)) {
                         FrmDashboardAdmin adminVista = new FrmDashboardAdmin();
                         new DashboardAdminController(adminVista);

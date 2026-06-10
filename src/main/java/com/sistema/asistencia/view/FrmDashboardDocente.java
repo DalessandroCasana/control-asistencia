@@ -6,7 +6,7 @@ import java.awt.*;
 
 public class FrmDashboardDocente extends JFrame {
 
-    // Componentes que el Controlador modificará o escuchará (Deben ser públicos)
+    
     public JLabel lblBienvenida;
     public JLabel lblFechaActual;
     public JButton btnIniciarAsistencia;
@@ -15,21 +15,21 @@ public class FrmDashboardDocente extends JFrame {
     public DefaultTableModel modeloTabla;
 
     public FrmDashboardDocente() {
-        // Configuración de la ventana principal del profesor
+        
         setTitle("Dashboard de Control Docente - Sistema de Asistencia");
         setSize(850, 480);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        // Contenedor base con diseño limpio y moderno
+        
         JPanel panelPrincipal = new JPanel(new BorderLayout(15, 15));
         panelPrincipal.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         panelPrincipal.setBackground(new Color(240, 244, 248));
 
-        // ==========================================
-        // 1. PANEL SUPERIOR: Barra de Identificación
-        // ==========================================
+        
+        
+        
         JPanel panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setOpaque(false);
 
@@ -55,9 +55,9 @@ public class FrmDashboardDocente extends JFrame {
         panelSuperior.add(btnCerrarSesion, BorderLayout.EAST);
         panelPrincipal.add(panelSuperior, BorderLayout.NORTH);
 
-        // ==========================================
-        // 2. PANEL CENTRAL: Agenda del día (JTable)
-        // ==========================================
+        
+        
+        
         JPanel panelTabla = new JPanel(new BorderLayout());
         panelTabla.setBorder(BorderFactory.createTitledBorder(" Clases Programadas para su Dictado Hoy "));
         panelTabla.setBackground(Color.WHITE);
@@ -66,7 +66,7 @@ public class FrmDashboardDocente extends JFrame {
         modeloTabla = new DefaultTableModel(null, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Bloquea la edición manual de celdas en la cuadrícula
+                return false; 
             }
         };
 
@@ -75,7 +75,7 @@ public class FrmDashboardDocente extends JFrame {
         tblClasesHoy.getTableHeader().setReorderingAllowed(false);
         tblClasesHoy.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 
-        // Ocultar la columna ID Sección para mantener estética limpia
+        
         tblClasesHoy.getColumnModel().getColumn(0).setMinWidth(0);
         tblClasesHoy.getColumnModel().getColumn(0).setMaxWidth(0);
         tblClasesHoy.getColumnModel().getColumn(0).setPreferredWidth(0);
@@ -84,9 +84,9 @@ public class FrmDashboardDocente extends JFrame {
         panelTabla.add(scroll, BorderLayout.CENTER);
         panelPrincipal.add(panelTabla, BorderLayout.CENTER);
 
-        // ==========================================
-        // 3. PANEL INFERIOR: Acciones de Control
-        // ==========================================
+        
+        
+        
         JPanel panelInferior = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panelInferior.setOpaque(false);
 
@@ -96,7 +96,7 @@ public class FrmDashboardDocente extends JFrame {
         btnIniciarAsistencia.setForeground(Color.WHITE);
         btnIniciarAsistencia.setPreferredSize(new Dimension(240, 40));
         btnIniciarAsistencia.setFocusPainted(false);
-        btnIniciarAsistencia.setEnabled(false); // Se activará solo si hay clases en agenda
+        btnIniciarAsistencia.setEnabled(false); 
 
         panelInferior.add(btnIniciarAsistencia);
         panelPrincipal.add(panelInferior, BorderLayout.SOUTH);

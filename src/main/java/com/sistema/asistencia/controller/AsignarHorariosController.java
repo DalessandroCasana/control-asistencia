@@ -23,7 +23,6 @@ public class AsignarHorariosController implements ActionListener {
         this.horarioDAO = new HorarioDAO();
 
         this.vista.btnGuardar.addActionListener(this);
-        this.vista.btnCerrar.addActionListener(this);
 
         inicializarComboSecciones();
         refrescarTabla();
@@ -65,9 +64,7 @@ public class AsignarHorariosController implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == vista.btnCerrar) {
-            vista.dispose();
-        } else if (e.getSource() == vista.btnGuardar) {
+        if (e.getSource() == vista.btnGuardar) {
             ejecutarAsignacionHorario();
         }
     }
@@ -85,7 +82,7 @@ public class AsignarHorariosController implements ActionListener {
         }
 
         try {
-            // Conversión de Strings (HH:MM) a objetos java.sql.Time anexando segundos por estándar
+            
             Time horaInicio = Time.valueOf(hInicioRaw + ":00");
             Time horaFin = Time.valueOf(hFinRaw + ":00");
 
